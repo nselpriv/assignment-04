@@ -1,4 +1,5 @@
-﻿namespace Assignment.Core;
+﻿
+namespace Assignment.Core;
 
 public interface IWorkItemRepository
 {
