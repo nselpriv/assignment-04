@@ -30,7 +30,7 @@ public class TaskRepository : ITaskRepository
 
         }
 
-        var newTask = new Task(task.Title, assignedUser, task.Description, State.New, assignedTags, DateTime.UtcNow);
+        var newTask = new Task(task.Title, assignedUser, task.Description, State.New, assignedTags);
 
         _context.Tasks.Add(newTask);
         _context.SaveChanges();
@@ -77,12 +77,9 @@ public class TaskRepository : ITaskRepository
             listOfTags.Add(tag.Name);
         }
 
-
-        DateTime DateTime = new();
-
         if (tempTask is null) return null;
 
-        return new TaskDetailsDTO(tempTask.id, tempTask.Title, tempTask.Description, DateTime, tempTask.AssignedTo.Name, listOfTags, tempTask.state, DateTime);
+        return new TaskDetailsDTO(tempTask.id, tempTask.Title, tempTask.Description, tempTask.created, tempTask.AssignedTo.Name, listOfTags, tempTask.state, tempTask.statusUpdated);
     }
 
 
@@ -100,7 +97,7 @@ public class TaskRepository : ITaskRepository
 
             }
 
-            returnList.Add(new TaskDTO(user.id, user.Title, user.AssignedTo.Name, tags, user.state, DateTime.UtcNow, null));
+            returnList.Add(new TaskDTO(user.id, user.Title, user.AssignedTo.Name, tags, user.state, user.created, user.statusUpdated));
         }
 
         return new System.Collections.ObjectModel.ReadOnlyCollection<TaskDTO>(returnList);
@@ -135,6 +132,7 @@ public class TaskRepository : ITaskRepository
         updateDis.AssignedTo = _context.Users.FirstOrDefault(c => c.id == task.AssignedToId);
         updateDis.Description = task.Description;
         updateDis.state = task.State;
+        updateDis.created = task.created;
         List<Tag> newTags = new();
 
         // Create the associated tags

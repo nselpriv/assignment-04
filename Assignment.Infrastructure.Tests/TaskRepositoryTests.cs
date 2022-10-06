@@ -35,8 +35,9 @@ public sealed class TaskRepositoryTests : IDisposable
         var allTags = new List<Tag> { tag1, tag2 };
         var testUser1 = new User("Oscar", "Oggelicious@svenskamail.dk") { id = 1 };
         var testUser2 = new User("Gotham", "nicolejs@tuborg.dk") { id = 2 };
-        var task1 = new Task("hello", testUser1, "Lets go ahead and do it", State.Active, allTags!, DateTime.UtcNow) { id = 1 };
-        var task2 = new Task("crazy important task", testUser2, "Long description", State.Removed, allTags!.Where(b => b.Name == "Hello").ToList(), DateTime.UtcNow) { id = 2 };
+        var task1 = new Task("hello", testUser1, "Lets go ahead and do it", State.Active, allTags!) { id = 1 };
+        var task2 = new Task("crazy important task", testUser2, "Long description", State.Removed, allTags!.Where(b => b.Name == "Hello").ToList()) { id = 2 };
+
 
         tasklist = new() { task1, task2 };
         //
@@ -75,7 +76,7 @@ public sealed class TaskRepositoryTests : IDisposable
     public void read_CallMethodWithTestDb_GetCollectionOfAllTestTasks()
     {
         // Given
-        var suspectedTasks = tasklist.Select(c => new TaskDTO(c.id, c.Title, c.AssignedTo!.Name, c.tags.Select(c => c.Name).ToList(), c.state, DateTime.UtcNow, null));
+        var suspectedTasks = tasklist.Select(c => new TaskDTO(c.id, c.Title, c.AssignedTo!.Name, c.tags.Select(c => c.Name).ToList(), c.state, c.created, c.statusUpdated));
 
         // When
         var allTasks = _repository.ReadAll();
@@ -90,7 +91,7 @@ public sealed class TaskRepositoryTests : IDisposable
     {
 
         // Given
-        var suspectedTasks = new TaskDTO(1, "hello", testUser1.Name, allTags.Select(c => c.Name).ToList(), State.Active, DateTime.UtcNow, null);
+        var suspectedTasks = new TaskDetailsDTO(1, task1.Title, task1.Description, task1.created, testUser1.Name, allTags.Select(c => c.Name).ToList(), State.Active, task2.statusUpdated);
 
         // When
         var outputTask = _repository.Read(1);
