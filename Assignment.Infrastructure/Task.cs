@@ -24,20 +24,20 @@ public class Task
 
     public DateTime created;
     public DateTime? statusUpdated;
+
+    // HAS TO BE HERE OTHERWISE WE GET AN ERROR CREATING THE DATABASE USING DEPENDENCY INJECTION
     public Task()
     {
 
     }
-
-
-    public Task(string title, User? assignedUser, string? description, State state, ICollection<Tag> tags, DateTime created)
+    public Task(string title, User? assignedUser, string? description, State state, ICollection<Tag> tags)
     {
         Title = title;
         this.AssignedTo = assignedUser;
         this.Description = description;
         this.state = state;
         this.tags = tags;
-        this.created = created;
+        this.created = DateTime.UtcNow;
         this.statusUpdated = null;
     }
 }
