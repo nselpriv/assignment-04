@@ -16,7 +16,7 @@ public class Task
     public string? Description { get; set; }
 
     [Required]
-    public State state { get; set; }
+    public State State { get; set; }
 
     // Implement 
     public virtual ICollection<Tag> tags { get; set; }
@@ -30,13 +30,13 @@ public class Task
     {
 
     }
-    public Task(string title, User? assignedUser, string? description, State state, ICollection<Tag> tags)
+    public Task(string title, User? assignedUser, string? description, ICollection<Tag> tags)
     {
         Title = title;
         this.AssignedTo = assignedUser;
         this.Description = description;
-        this.state = state;
         this.tags = tags;
+        this.State = State.New;
         this.created = DateTime.UtcNow;
         this.statusUpdated = null;
     }

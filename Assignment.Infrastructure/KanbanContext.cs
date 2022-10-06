@@ -16,7 +16,7 @@ public sealed class KanbanContext : DbContext
     {
         // TASK
         modelBuilder.Entity<Task>()
-        .Property(e => e.state)
+        .Property(e => e.State)
         .HasConversion(
                     v => v.ToString(),
                     v => (State)Enum.Parse(typeof(State), v));

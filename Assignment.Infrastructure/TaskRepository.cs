@@ -30,7 +30,7 @@ public class TaskRepository : ITaskRepository
 
         }
 
-        var newTask = new Task(task.Title, assignedUser, task.Description, State.New, assignedTags);
+        var newTask = new Task(task.Title, assignedUser, task.Description, assignedTags);
 
         _context.Tasks.Add(newTask);
         _context.SaveChanges();
@@ -41,13 +41,13 @@ public class TaskRepository : ITaskRepository
     {
         var deleteDis = _context.Tasks.FirstOrDefault(c => c.id == taskId);
         if (deleteDis is null) return Response.NotFound;
-        if (deleteDis.state == State.New)
+        if (deleteDis.State == State.New)
         {
             _context.Tasks.Remove(deleteDis);
             _context.SaveChanges();
             return Response.Deleted;
         }
-        if (deleteDis.state == State.Active)
+        if (deleteDis.State == State.Active)
         {
             var stringListOfTags = new List<string>();
             foreach (var tag in deleteDis.tags)
@@ -79,7 +79,7 @@ public class TaskRepository : ITaskRepository
 
         if (tempTask is null) return null;
 
-        return new TaskDetailsDTO(tempTask.id, tempTask.Title, tempTask.Description, tempTask.created, tempTask.AssignedTo.Name, listOfTags, tempTask.state, tempTask.statusUpdated);
+        return new TaskDetailsDTO(tempTask.id, tempTask.Title, tempTask.Description, tempTask.created, tempTask.AssignedTo.Name, listOfTags, tempTask.State, tempTask.statusUpdated);
     }
 
 
@@ -97,7 +97,7 @@ public class TaskRepository : ITaskRepository
 
             }
 
-            returnList.Add(new TaskDTO(user.id, user.Title, user.AssignedTo.Name, tags, user.state, user.created, user.statusUpdated));
+            returnList.Add(new TaskDTO(user.id, user.Title, user.AssignedTo.Name, tags, user.State, user.created, user.statusUpdated));
         }
 
         return new System.Collections.ObjectModel.ReadOnlyCollection<TaskDTO>(returnList);
@@ -131,7 +131,7 @@ public class TaskRepository : ITaskRepository
         updateDis.Title = task.Title;
         updateDis.AssignedTo = _context.Users.FirstOrDefault(c => c.id == task.AssignedToId);
         updateDis.Description = task.Description;
-        updateDis.state = task.State;
+        updateDis.State = task.State;
         updateDis.created = task.created;
         List<Tag> newTags = new();
 
